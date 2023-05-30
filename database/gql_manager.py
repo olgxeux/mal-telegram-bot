@@ -1,4 +1,3 @@
-import asyncio
 from gql_strings import *
 from gql import Client, gql
 from gql.transport.aiohttp import AIOHTTPTransport

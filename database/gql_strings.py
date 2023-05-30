@@ -40,7 +40,7 @@ query GetShortMedia($id: Int!) {
 
 GET_PAGE_QUERY_STRING = """
 query GetPage($page: Int!, $search: String!, $type: MediaType!) {
-  Page(page: $page, perPage: 8) {
+  Page(page: $page, perPage: 3) {
     media(search: $search, type: $type, sort: POPULARITY_DESC) {
       id
       title {
@@ -54,5 +54,4 @@ query GetPage($page: Int!, $search: String!, $type: MediaType!) {
       hasNextPage
     }
   }
-}
-"""
+}"""
