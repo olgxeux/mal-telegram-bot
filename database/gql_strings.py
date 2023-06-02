@@ -1,5 +1,3 @@
-GQL_SERVER = "https://graphql.anilist.co"
-
 GET_MEDIA_QUERY_STRING = """
 query GetMedia($id: Int!) {
   Media(id: $id) {

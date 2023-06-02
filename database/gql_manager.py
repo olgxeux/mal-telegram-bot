@@ -1,13 +1,10 @@
-from gql_strings import *
-from gql import Client, gql
-from gql.transport.aiohttp import AIOHTTPTransport
-
-
-transport = AIOHTTPTransport(url=GQL_SERVER)
+from database.gql_strings import *
+from gql import gql
+from loader import gql_client
 
 
 async def get_media(id: int) -> dict:
-    async with Client(transport=transport) as client:
+    async with gql_client as client:
         query = gql(GET_MEDIA_QUERY_STRING)
         variables = {"id": id}
         result = await client.execute(query, variable_values=variables)
@@ -16,7 +13,7 @@ async def get_media(id: int) -> dict:
 
 
 async def get_short_media(id: int) -> dict:
-    async with Client(transport=transport) as client:
+    async with gql_client as client:
         query = gql(GET_SHORT_MEDIA_QUERY_STRING)
         variables = {"id": id}
         result = await client.execute(query, variable_values=variables)
@@ -25,7 +22,7 @@ async def get_short_media(id: int) -> dict:
 
 
 async def get_page(page_number: int, title_name: str, title_type: str) -> dict:
-    async with Client(transport=transport) as client:
+    async with gql_client as client:
         query = gql(GET_PAGE_QUERY_STRING)
         variables = {"page": page_number,
                      "search": title_name,
