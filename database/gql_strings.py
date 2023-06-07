@@ -19,7 +19,6 @@ query GetMedia($id: Int!) {
     coverImage {
       extraLarge
     }
-    description(asHtml: false)
   }
 }"""
 
