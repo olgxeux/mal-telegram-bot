@@ -7,8 +7,8 @@ from gql.transport.aiohttp import AIOHTTPTransport
 
 from config import BOT_TOKEN, CONNECTION_STRING, DATABASE_NAME, GQL_SERVER
 
-
-bot = Bot(BOT_TOKEN, parse_mode="HTML")
+# parse_mode="MarkdownV2"
+bot = Bot(BOT_TOKEN, parse_mode="Markdown")
 storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
 
