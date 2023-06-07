@@ -1,5 +1,4 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-from database.mongodb_manager import get_user
 from math import ceil
 from utils import type_to_list_name
 
@@ -36,4 +35,24 @@ async def get_users_medias_kb(type: str, user: dict, page: int, per_page=9) -> I
                                     callback_data=f"view_users_list_{type}_p_{page + 1}"))  # type: ignore
     kb.row(InlineKeyboardButton(
         text="Back", callback_data=f"view_main_menu"))  # type: ignore
+    return kb
+
+
+async def get_media_kb(type: str, is_in_users_list: bool, media: dict) -> InlineKeyboardMarkup:
+
+    kb = InlineKeyboardMarkup()
+
+    if is_in_users_list:
+        kb.row(InlineKeyboardButton(
+            text="Change rating", callback_data=f"change_rating_for_{media['id']}"))  # type: ignore
+        kb.row(InlineKeyboardButton(
+            text="Change status", callback_data=f"change_status_for_{media['id']}"))  # type: ignore
+        kb.row(InlineKeyboardButton(
+            text="Remove", callback_data=f"remove_{media['id']}"))  # type: ignore
+    else:
+        kb.row(InlineKeyboardButton(
+            text="Add", callback_data=f"add_{media['id']}"))  # type: ignore
+
+    kb.row(InlineKeyboardButton(
+        text="Back", callback_data=f"view_users_list_{type}_p_0_back"))  # type: ignore
     return kb
