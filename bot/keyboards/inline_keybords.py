@@ -7,9 +7,9 @@ from utils import type_to_list_name
 def get_main_menu_kb() -> InlineKeyboardMarkup:
     kb = InlineKeyboardMarkup()
     kb.row(InlineKeyboardButton(text="My anime",
-           callback_data="view_list_anime_p_0"))  # type: ignore
+           callback_data="view_users_list_anime_p_0"))  # type: ignore
     kb.row(InlineKeyboardButton(text="My manga",
-           callback_data="view_list_manga_p_0"))  # type: ignore
+           callback_data="view_users_list_manga_p_0"))  # type: ignore
     return kb
 
 
@@ -22,7 +22,7 @@ async def get_users_medias_kb(type: str, user: dict, page: int, per_page=9) -> I
 
     for media in media_list[per_page * page: per_page * page + per_page]:
         kb.row(InlineKeyboardButton(text=media["Title"]["userPreferred"],  # type: ignore
-                                    callback_data=f"view_user_media_{media['Id']}"))
+                                    callback_data=f"view_users_media_{type}_{media['Id']}"))
     if page == 0:
         kb.row(InlineKeyboardButton(text=">",
                                     callback_data=f"view_users_list_{type}_p_{page + 1}"))  # type: ignore
