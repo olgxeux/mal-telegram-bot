@@ -1,5 +1,5 @@
 from aiogram import Bot, Dispatcher
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from aiogram.fsm.storage.memory import MemoryStorage
 from motor.motor_asyncio import AsyncIOMotorClient
 
 from gql import Client
@@ -10,7 +10,7 @@ from config import BOT_TOKEN, CONNECTION_STRING, DATABASE_NAME, GQL_SERVER
 # parse_mode="MarkdownV2"
 bot = Bot(BOT_TOKEN, parse_mode="Markdown")
 storage = MemoryStorage()
-dp = Dispatcher(bot, storage=storage)
+dp = Dispatcher(storage=storage)
 
 mongo_client = AsyncIOMotorClient(CONNECTION_STRING)
 user_db = mongo_client[DATABASE_NAME]
