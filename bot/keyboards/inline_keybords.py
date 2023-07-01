@@ -1,15 +1,21 @@
-from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from math import ceil
+from aiogram.types import InlineKeyboardMarkup
+from aiogram.utils.keyboard import InlineKeyboardBuilder
+from bot.callbacks import *
 from utils import type_to_list_name
 
 
 def get_main_menu_kb() -> InlineKeyboardMarkup:
-    kb = InlineKeyboardMarkup()
-    kb.row(InlineKeyboardButton(text="My anime",
-           callback_data="view_users_list_anime_p_0"))  # type: ignore
-    kb.row(InlineKeyboardButton(text="My manga",
-           callback_data="view_users_list_manga_p_0"))  # type: ignore
-    return kb
+    builder = InlineKeyboardBuilder()
+
+    builder.button(
+        text="My anime",
+        callback_data=ViewUsersListCB(media_type="anime", page=0))
+    builder.button(
+        text="My manga",
+        callback_data=ViewUsersListCB(media_type="manga", page=0))
+
+    return builder.as_markup()
 
 
 async def get_users_medias_kb(type: str, user: dict, page: int, per_page=9) -> InlineKeyboardMarkup:
@@ -17,42 +23,56 @@ async def get_users_medias_kb(type: str, user: dict, page: int, per_page=9) -> I
     media_list = user[list_name]
     last_page = ceil(len(media_list) / per_page) - 1
 
-    kb = InlineKeyboardMarkup()
+    builder = InlineKeyboardBuilder()
 
     for media in media_list[per_page * page: per_page * page + per_page]:
-        kb.row(InlineKeyboardButton(text=media["Title"]["userPreferred"],  # type: ignore
-                                    callback_data=f"view_users_media_{type}_{media['Id']}"))
+        builder.button(
+            text=media["Title"]["userPreferred"],
+            callback_data=ViewUsersMediaCB(media_type=type, media_id=media["Id"], from_page=page))
     if page == 0:
-        kb.row(InlineKeyboardButton(text=">",
-                                    callback_data=f"view_users_list_{type}_p_{page + 1}"))  # type: ignore
+        builder.button(
+            text=">",
+            callback_data=ViewUsersListCB(media_type=type, page=page + 1))
     elif page == last_page:
-        kb.row(InlineKeyboardButton(text="<",
-                                    callback_data=f"view_users_list_{type}_p_{page - 1}"))  # type: ignore
+        builder.button(
+            text="<",
+            callback_data=ViewUsersListCB(media_type=type, page=page - 1))
     else:
-        kb.row(InlineKeyboardButton(text="<",
-                                    callback_data=f"view_users_list_{type}_p_{page - 1}"),  # type: ignore
-               InlineKeyboardButton(text=">",
-                                    callback_data=f"view_users_list_{type}_p_{page + 1}"))  # type: ignore
-    kb.row(InlineKeyboardButton(
-        text="Back", callback_data=f"view_main_menu"))  # type: ignore
-    return kb
+        builder.button(
+            text="<",
+            callback_data=ViewUsersListCB(media_type=type, page=page - 1))
+        builder.button(
+            text=">",
+            callback_data=ViewUsersListCB(media_type=type, page=page + 1))
+    builder.button(
+        text="Back",
+        callback_data=ViewMainMenuCB())
+
+    return builder.as_markup()
 
 
-async def get_media_kb(type: str, is_in_users_list: bool, media: dict) -> InlineKeyboardMarkup:
+async def get_media_kb(type: str, is_in_users_list: bool, media: dict, from_page: int) -> InlineKeyboardMarkup:
 
-    kb = InlineKeyboardMarkup()
+    builder = InlineKeyboardBuilder()
 
+    media_id = media['id']
     if is_in_users_list:
-        kb.row(InlineKeyboardButton(
-            text="Change rating", callback_data=f"change_rating_for_{media['id']}"))  # type: ignore
-        kb.row(InlineKeyboardButton(
-            text="Change status", callback_data=f"change_status_for_{media['id']}"))  # type: ignore
-        kb.row(InlineKeyboardButton(
-            text="Remove", callback_data=f"remove_{media['id']}"))  # type: ignore
+        builder.button(
+            text="Change rating",
+            callback_data=ViewRatingMenuCB(media_id=media_id))
+        builder.button(
+            text="Change status",
+            callback_data=ViewStatusMenuCB(media_id=media_id))
+        builder.button(
+            text="Remove",
+            callback_data=ViewRemovingMenuCB(media_id=media_id))
     else:
-        kb.row(InlineKeyboardButton(
-            text="Add", callback_data=f"add_{media['id']}"))  # type: ignore
+        builder.button(
+            text="Add",
+            callback_data=ViewAddingMenuCB(media_id=media_id))
 
-    kb.row(InlineKeyboardButton(
-        text="Back", callback_data=f"view_users_list_{type}_p_0_back"))  # type: ignore
-    return kb
+    builder.button(
+        text="Back",
+        callback_data=ViewUsersListCB(media_type=type, page=from_page))
+
+    return builder.as_markup()
