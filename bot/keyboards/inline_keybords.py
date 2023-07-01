@@ -23,6 +23,11 @@ async def get_users_medias_kb(type: str, user: dict, page: int, per_page=9) -> I
     media_list = user[list_name]
     last_page = ceil(len(media_list) / per_page) - 1
 
+    if page > last_page:
+        page = last_page
+
+    print(page, last_page)
+
     builder = InlineKeyboardBuilder()
 
     for media in media_list[per_page * page: per_page * page + per_page]:
@@ -101,6 +106,19 @@ async def get_status_menu_kb(type: str, media_id: int, from_page: int) -> Inline
             text=f"{status}",
             callback_data=ChangeStatusCB(media_type=type, media_id=media_id, status=status, from_page=from_page))
 
+    builder.button(
+        text="Cancel",
+        callback_data=ViewUsersMediaCB(media_type=type, media_id=media_id, from_page=from_page))
+
+    return builder.as_markup()
+
+
+async def get_removing_menu_kb(type: str, media_id: int, from_page: int) -> InlineKeyboardMarkup:
+    builder = InlineKeyboardBuilder()
+
+    builder.button(
+        text="Remove",
+        callback_data=RemoveMediaCB(media_type=type, media_id=media_id, from_page=from_page))
     builder.button(
         text="Cancel",
         callback_data=ViewUsersMediaCB(media_type=type, media_id=media_id, from_page=from_page))

@@ -55,5 +55,12 @@ class ViewRemovingMenuCB(CallbackData, prefix="ViewReM"):
     is_new: bool = False
 
 
+class RemoveMediaCB(CallbackData, prefix="RemoveM"):
+    media_type: str
+    media_id: int
+    from_page: int
+    is_new: bool = False
+
+
 class ViewAddingMenuCB(CallbackData, prefix="ViewAM"):
     media_id: int

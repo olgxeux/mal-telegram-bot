@@ -21,7 +21,7 @@ async def add_media_for_user(media_type: str, user_id: int, new_media: dict) -> 
     return user
 
 
-async def delete_media_from_user(media_type: str, user_id: int, media_id: int) -> dict:
+async def remove_media_from_user(media_type: str, user_id: int, media_id: int) -> dict:
     list_name = type_to_list_name(media_type)
     user = await _user_collection.find_one_and_update(
         {"id": user_id}, {"$pull": {list_name: {"Id": media_id}}}, return_document=True)

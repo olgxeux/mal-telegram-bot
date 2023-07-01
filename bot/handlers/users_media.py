@@ -1,8 +1,8 @@
 from aiogram import types
 from loader import dp, bot
-from database.mongodb_manager import get_user, change_users_media_rating, change_users_media_status
-from bot.keyboards.inline_keybords import get_rating_menu_kb, get_status_menu_kb
-from bot.callbacks import ViewRatingMenuCB, ChangeRatingCB, ViewStatusMenuCB, ChangeStatusCB
+from database.mongodb_manager import get_user, change_users_media_rating, change_users_media_status, remove_media_from_user
+from bot.keyboards.inline_keybords import get_rating_menu_kb, get_status_menu_kb, get_removing_menu_kb, get_users_medias_kb
+from bot.callbacks import ViewRatingMenuCB, ChangeRatingCB, ViewStatusMenuCB, ChangeStatusCB, ViewRemovingMenuCB, RemoveMediaCB
 from bot.message_utils import media_message_params
 
 
@@ -74,3 +74,34 @@ async def change_status(callback: types.CallbackQuery, callback_data: ChangeStat
     message_id = callback.message.message_id  # type: ignore
     await bot.delete_message(chat_id=chat_id, message_id=message_id)
     await bot.send_photo(chat_id=chat_id, photo=image, caption=message_text, reply_markup=kb)
+
+
+@dp.callback_query(ViewRemovingMenuCB.filter())
+async def view_removing_menu(callback: types.CallbackQuery, callback_data: ViewRemovingMenuCB):
+    user_id = 228
+    user = await get_user(user_id)
+
+    media_type = callback_data.media_type
+    media_id = callback_data.media_id
+    from_page = callback_data.from_page
+
+    kb = await get_removing_menu_kb(media_type, media_id, from_page)
+
+    chat_id = callback.message.chat.id  # type: ignore
+    message_id = callback.message.message_id  # type: ignore
+    await bot.delete_message(chat_id=chat_id, message_id=message_id)
+    await bot.send_message(chat_id=chat_id, text=f"Are you sure?", reply_markup=kb)
+
+
+@dp.callback_query(RemoveMediaCB.filter())
+async def remove_media(callback: types.CallbackQuery, callback_data: RemoveMediaCB):
+    media_type = callback_data.media_type
+    media_id = callback_data.media_id
+    from_page = callback_data.from_page
+# type to int
+    user_id = 228
+    user = await remove_media_from_user(media_type, user_id, media_id)
+
+    kb = await get_users_medias_kb(media_type, user, from_page)
+
+    await callback.message.edit_text(f"Here is your {media_type} list:", reply_markup=kb)
