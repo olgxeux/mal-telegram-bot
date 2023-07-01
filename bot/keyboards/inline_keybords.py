@@ -91,3 +91,18 @@ async def get_rating_menu_kb(type: str, media_id: int, from_page: int) -> Inline
         callback_data=ViewUsersMediaCB(media_type=type, media_id=media_id, from_page=from_page))
 
     return builder.as_markup()
+
+
+async def get_status_menu_kb(type: str, media_id: int, from_page: int) -> InlineKeyboardMarkup:
+    builder = InlineKeyboardBuilder()
+
+    for status in range(4):
+        builder.button(
+            text=f"{status}",
+            callback_data=ChangeStatusCB(media_type=type, media_id=media_id, status=status, from_page=from_page))
+
+    builder.button(
+        text="Cancel",
+        callback_data=ViewUsersMediaCB(media_type=type, media_id=media_id, from_page=from_page))
+
+    return builder.as_markup()

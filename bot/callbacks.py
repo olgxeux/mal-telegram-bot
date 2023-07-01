@@ -41,7 +41,10 @@ class ViewStatusMenuCB(CallbackData, prefix="ViewSM"):
 
 
 class ChangeStatusCB(CallbackData, prefix="ChangeS"):
+    media_type: str
     media_id: int
+    status: int
+    from_page: int
     is_new: bool = False
 
 
