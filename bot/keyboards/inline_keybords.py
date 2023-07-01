@@ -59,13 +59,13 @@ async def get_media_kb(type: str, is_in_users_list: bool, media: dict, from_page
     if is_in_users_list:
         builder.button(
             text="Change rating",
-            callback_data=ViewRatingMenuCB(media_id=media_id))
+            callback_data=ViewRatingMenuCB(media_type=type, media_id=media_id, from_page=from_page))
         builder.button(
             text="Change status",
-            callback_data=ViewStatusMenuCB(media_id=media_id))
+            callback_data=ViewStatusMenuCB(media_type=type, media_id=media_id, from_page=from_page))
         builder.button(
             text="Remove",
-            callback_data=ViewRemovingMenuCB(media_id=media_id))
+            callback_data=ViewRemovingMenuCB(media_type=type, media_id=media_id, from_page=from_page))
     else:
         builder.button(
             text="Add",
@@ -74,5 +74,20 @@ async def get_media_kb(type: str, is_in_users_list: bool, media: dict, from_page
     builder.button(
         text="Back",
         callback_data=ViewUsersListCB(media_type=type, page=from_page))
+
+    return builder.as_markup()
+
+
+async def get_rating_menu_kb(type: str, media_id: int, from_page: int) -> InlineKeyboardMarkup:
+    builder = InlineKeyboardBuilder()
+
+    for rating in range(11):
+        builder.button(
+            text=f"{rating}",
+            callback_data=ChangeRatingCB(media_type=type, media_id=media_id, rating=rating, from_page=from_page))
+
+    builder.button(
+        text="Cancel",
+        callback_data=ViewUsersMediaCB(media_type=type, media_id=media_id, from_page=from_page))
 
     return builder.as_markup()

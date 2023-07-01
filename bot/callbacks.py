@@ -19,17 +19,37 @@ class ViewUsersMediaCB(CallbackData, prefix="ViewUM"):
 
 
 class ViewRatingMenuCB(CallbackData, prefix="ViewRaM"):
+    media_type: str
     media_id: int
+    from_page: int
+    is_new: bool = False
+
+
+class ChangeRatingCB(CallbackData, prefix="ChangeRa"):
+    media_type: str
+    media_id: int
+    rating: int
+    from_page: int
     is_new: bool = False
 
 
 class ViewStatusMenuCB(CallbackData, prefix="ViewSM"):
+    media_type: str
+    media_id: int
+    from_page: int
+    is_new: bool = False
+
+
+class ChangeStatusCB(CallbackData, prefix="ChangeS"):
     media_id: int
     is_new: bool = False
 
 
 class ViewRemovingMenuCB(CallbackData, prefix="ViewReM"):
+    media_type: str
     media_id: int
+    from_page: int
+    is_new: bool = False
 
 
 class ViewAddingMenuCB(CallbackData, prefix="ViewAM"):
