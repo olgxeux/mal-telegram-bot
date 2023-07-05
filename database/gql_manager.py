@@ -24,9 +24,11 @@ async def get_short_media(id: int) -> dict:
 async def get_page(page_number: int, title_name: str, title_type: str) -> dict:
     async with gql_client as client:
         query = gql(GET_PAGE_QUERY_STRING)
-        variables = {"page": page_number,
-                     "search": title_name,
-                     "type": title_type}
+        variables = {
+            "page": page_number,
+            "search": title_name,
+            "type": title_type
+        }
         result = await client.execute(query, variable_values=variables)
 
         return result

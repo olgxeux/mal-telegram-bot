@@ -52,30 +52,30 @@ async def get_users_medias_kb(type: str, user: dict, page: int, per_page=9) -> I
     builder.button(
         text="Back",
         callback_data=ViewMainMenuCB())
+    builder.button(
+        text=f"Search {type}",
+        callback_data=SearchMediaCB(media_type=type, from_page=page))
 
     return builder.as_markup()
 
 
-async def get_media_kb(type: str, is_in_users_list: bool, media: dict, from_page: int) -> InlineKeyboardMarkup:
+async def get_users_media_kb(type: str, media: dict, from_page: int, ) -> InlineKeyboardMarkup:
 
     builder = InlineKeyboardBuilder()
 
     media_id = media['id']
-    if is_in_users_list:
-        builder.button(
-            text="Change rating",
-            callback_data=ViewRatingMenuCB(media_type=type, media_id=media_id, from_page=from_page))
-        builder.button(
-            text="Change status",
-            callback_data=ViewStatusMenuCB(media_type=type, media_id=media_id, from_page=from_page))
-        builder.button(
-            text="Remove",
-            callback_data=ViewRemovingMenuCB(media_type=type, media_id=media_id, from_page=from_page))
-    else:
-        builder.button(
-            text="Add",
-            callback_data=ViewAddingMenuCB(media_id=media_id))
-
+    builder.button(
+        text="Change rating",
+        callback_data=ViewRatingMenuCB(media_type=type, media_id=media_id, from_page=from_page))
+    builder.button(
+        text="Change status",
+        callback_data=ViewStatusMenuCB(media_type=type, media_id=media_id, from_page=from_page))
+    builder.button(
+        text="Remove",
+        callback_data=ViewRemovingMenuCB(media_type=type, media_id=media_id, from_page=from_page))
+    # builder.button(
+    #     text="Add",
+    #     callback_data=ViewAddingMenuCB(media_id=media_id))
     builder.button(
         text="Back",
         callback_data=ViewUsersListCB(media_type=type, page=from_page))
@@ -122,5 +122,64 @@ async def get_removing_menu_kb(type: str, media_id: int, from_page: int) -> Inli
     builder.button(
         text="Cancel",
         callback_data=ViewUsersMediaCB(media_type=type, media_id=media_id, from_page=from_page))
+
+    return builder.as_markup()
+
+
+async def get_searching_menu_kb(type: str, from_page: int) -> InlineKeyboardMarkup:
+    builder = InlineKeyboardBuilder()
+
+    builder.button(
+        text="Cancel",
+        callback_data=ViewUsersListCB(media_type=type, page=from_page))
+
+    return builder.as_markup()
+
+
+async def get_search_medias_kb(media_type: str, search_prompt: str, media_list: dict, page: int, has_next_page: bool, from_page: int) -> InlineKeyboardMarkup:
+
+    builder = InlineKeyboardBuilder()
+
+    for media in media_list:
+        builder.button(
+            text=media["title"]["userPreferred"],
+            callback_data=ViewSearchMediaCB(media_type=media_type, media_id=media["id"], from_page=from_page, search_prompt=search_prompt))
+    if page <= 1:
+        builder.button(
+            text=">",
+            callback_data=ViewSearchListCB(media_type=media_type, page=page + 1, search_prompt=search_prompt, from_page=from_page))
+    elif not has_next_page:
+        builder.button(
+            text="<",
+            callback_data=ViewSearchListCB(media_type=media_type, page=page - 1, search_prompt=search_prompt, from_page=from_page))
+    else:
+        builder.button(
+            text="<",
+            callback_data=ViewSearchListCB(media_type=media_type, page=page - 1, search_prompt=search_prompt, from_page=from_page))
+        builder.button(
+            text=">",
+            callback_data=ViewSearchListCB(media_type=media_type, page=page + 1, search_prompt=search_prompt, from_page=from_page))
+    builder.button(
+        text="Back",
+        callback_data=ViewUsersListCB(media_type=media_type, page=from_page))
+    builder.button(
+        text=f"Search again",
+        callback_data=SearchMediaCB(media_type=media_type, from_page=from_page))
+
+    return builder.as_markup()
+
+
+async def get_search_media_kb(type: str, media: dict, from_page: int, search_prompt: str | None) -> InlineKeyboardMarkup:
+
+    builder = InlineKeyboardBuilder()
+
+    media_id = media['id']
+    builder.button(
+        text="Add",
+        callback_data=ViewAddingMenuCB(media_id=media_id))
+    builder.button(
+        text="Back",
+        callback_data=ViewSearchListCB(search_prompt=search_prompt, media_type=type, page=from_page, from_page=from_page))
+    print(search_prompt)
 
     return builder.as_markup()

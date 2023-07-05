@@ -62,5 +62,26 @@ class RemoveMediaCB(CallbackData, prefix="RemoveM"):
     is_new: bool = False
 
 
+class SearchMediaCB(CallbackData, prefix="SearchM"):
+    media_type: str
+    from_page: int
+
+
+class ViewSearchListCB(CallbackData, prefix="ViewSL"):
+    search_prompt: str | None
+    media_type: str
+    page: int
+    from_page: int
+    is_back: bool = False
+
+
+class ViewSearchMediaCB(CallbackData, prefix="ViewSeM"):
+    media_type: str
+    media_id: int
+    # is_in_list: bool
+    from_page: int
+    search_prompt: str
+
+
 class ViewAddingMenuCB(CallbackData, prefix="ViewAM"):
     media_id: int

@@ -1,9 +1,9 @@
-from bot.keyboards.inline_keybords import get_media_kb
+from bot.keyboards.inline_keybords import get_users_media_kb, get_search_media_kb
 from database.gql_manager import *
 from utils import type_to_list_name
 
 
-async def media_message_params(media_type: str, user: dict, media_id: int, from_page: int):
+async def media_message_params(media_type: str, user: dict, media_id: int, from_page: int, search_prompt: str | None = None):
     list_name = type_to_list_name(media_type)
 
     users_media = None
@@ -21,7 +21,7 @@ async def media_message_params(media_type: str, user: dict, media_id: int, from_
     text_parts = []
     text_parts.append(
         f"{gql_media['title']['userPreferred']} ({gql_media['format']})\n\n")
-    if users_media:
+    if is_in_users_list:
         text_parts.append(f"Your rating: {users_media['Rating']} ⭐️\n")
         text_parts.append(f"Your status: {users_media['Status']}\n\n")
     text_parts.append(f"Info:\nYear: {gql_media['startDate']['year']}\n")
@@ -31,6 +31,9 @@ async def media_message_params(media_type: str, user: dict, media_id: int, from_
 
     message_text = "".join(text_parts)
 
-    kb = await get_media_kb(media_type, is_in_users_list, gql_media, from_page)
+    if is_in_users_list:
+        kb = await get_users_media_kb(media_type, gql_media, from_page)
+    else:
+        kb = await get_search_media_kb(media_type, gql_media, from_page, search_prompt)
 
     return image, message_text, kb

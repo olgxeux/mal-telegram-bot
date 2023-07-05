@@ -1,14 +1,18 @@
 from aiogram import types
+from aiogram.fsm.context import FSMContext
+
 from loader import dp, bot
 from bot.keyboards.inline_keybords import get_users_medias_kb
 from bot.message_utils import media_message_params
 from bot.callbacks import ViewUsersListCB, ViewUsersMediaCB
-from database.gql_manager import *
 from database.mongodb_manager import get_user
 
 
 @dp.callback_query(ViewUsersListCB.filter())
-async def view_users_media_list(callback: types.CallbackQuery, callback_data: ViewUsersListCB):
+async def view_users_media_list(callback: types.CallbackQuery, callback_data: ViewUsersListCB, state: FSMContext):
+    if state.get_state() is not None:
+        await state.clear()
+
     user_id = 228
     user = await get_user(user_id)
 
@@ -32,7 +36,6 @@ async def view_users_media(callback: types.CallbackQuery, callback_data: ViewUse
     user_id = 228
     user = await get_user(user_id)
 
-    # print(callback.data)
     media_type = callback_data.media_type
     media_id = callback_data.media_id
     from_page = callback_data.from_page
