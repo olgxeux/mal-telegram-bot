@@ -25,8 +25,12 @@ async def media_message_params(media_type: str, user: dict, media_id: int, from_
         text_parts.append(f"Your rating: {users_media['Rating']} ⭐️\n")
         text_parts.append(f"Your status: {users_media['Status']}\n\n")
     text_parts.append(f"Info:\nYear: {gql_media['startDate']['year']}\n")
-    text_parts.append(
-        f"Rating on AniList: {gql_media['averageScore'] / 10} ⭐️\n")
+
+    avg_score = gql_media['averageScore']
+    if avg_score is not None:
+        avg_score = avg_score / 10
+
+    text_parts.append(f"Rating on AniList: {avg_score if not None else '-'} ⭐️\n")
     text_parts.append(f"Status: {gql_media['status']}")
 
     message_text = "".join(text_parts)
