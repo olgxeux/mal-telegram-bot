@@ -78,10 +78,36 @@ class ViewSearchListCB(CallbackData, prefix="ViewSL"):
 class ViewSearchMediaCB(CallbackData, prefix="ViewSeM"):
     media_type: str
     media_id: int
-    # is_in_list: bool
     from_page: int
     search_prompt: str
 
 
-class ViewAddingMenuCB(CallbackData, prefix="ViewAM"):
+class ViewAddRatingMenuCB(CallbackData, prefix="ViewARM"):
+    media_type: str
     media_id: int
+    from_page: int
+    search_prompt: str | None
+
+
+class ViewAddStatusMenuCB(CallbackData, prefix="ViewASM"):
+    media_type: str
+    media_id: int
+    from_page: int
+    search_prompt: str
+    rating: int
+
+
+class AddMediaCB(CallbackData, prefix="AddM"):
+    media_type: str
+    media_id: int
+    from_page: int
+    search_prompt: str
+    rating: int
+    status: int
+
+
+# class AddStatusMenuCB(CallbackData, prefix="ViewSM"):
+#     media_type: str
+#     media_id: int
+#     from_page: int
+#     is_new: bool = False

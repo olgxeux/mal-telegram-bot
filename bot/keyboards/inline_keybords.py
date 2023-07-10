@@ -169,17 +169,47 @@ async def get_search_medias_kb(media_type: str, search_prompt: str, media_list: 
     return builder.as_markup()
 
 
-async def get_search_media_kb(type: str, media: dict, from_page: int, search_prompt: str | None) -> InlineKeyboardMarkup:
+async def get_search_media_kb(media_type: str, media: dict, from_page: int, search_prompt: str | None) -> InlineKeyboardMarkup:
 
     builder = InlineKeyboardBuilder()
 
     media_id = media['id']
     builder.button(
         text="Add",
-        callback_data=ViewAddingMenuCB(media_id=media_id))
+        callback_data=ViewAddRatingMenuCB(media_type=media_type, media_id=media_id, from_page=from_page, search_prompt=search_prompt))
     builder.button(
         text="Back",
-        callback_data=ViewSearchListCB(search_prompt=search_prompt, media_type=type, page=from_page, from_page=from_page))
+        callback_data=ViewSearchListCB(search_prompt=search_prompt, media_type=media_type, page=from_page, from_page=from_page))
     print(search_prompt)
+
+    return builder.as_markup()
+
+
+async def get_rating_step_menu_kb(type: str, media_id: int, from_page: int, search_prompt: str | None) -> InlineKeyboardMarkup:
+    builder = InlineKeyboardBuilder()
+
+    for rating in range(11):
+        builder.button(
+            text=f"{rating}",
+            callback_data=ViewAddStatusMenuCB(media_type=type, media_id=media_id, rating=rating, from_page=from_page, search_prompt=search_prompt))
+
+    builder.button(
+        text="Cancel",
+        callback_data=ViewUsersMediaCB(media_type=type, media_id=media_id, from_page=from_page))
+
+    return builder.as_markup()
+
+
+async def get_status_step_menu_kb(type: str, media_id: int, from_page: int, rating: int, search_prompt: str) -> InlineKeyboardMarkup:
+    builder = InlineKeyboardBuilder()
+
+    for status in range(4):
+        builder.button(
+            text=f"{status}",
+            callback_data=AddMediaCB(media_type=type, media_id=media_id, rating=rating, status=status, from_page=from_page, search_prompt=search_prompt))
+
+    builder.button(
+        text="Cancel",
+        callback_data=ViewUsersMediaCB(media_type=type, media_id=media_id, from_page=from_page))
 
     return builder.as_markup()

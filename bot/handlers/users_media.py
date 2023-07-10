@@ -8,7 +8,8 @@ from bot.message_utils import media_message_params
 
 @dp.callback_query(ViewRatingMenuCB.filter())
 async def view_rating_menu(callback: types.CallbackQuery, callback_data: ViewRatingMenuCB):
-    user_id = 228
+    # user_id = 228
+    user_id = callback.from_user.id
     user = await get_user(user_id)
 
     media_type = callback_data.media_type
@@ -30,7 +31,8 @@ async def change_rating(callback: types.CallbackQuery, callback_data: ChangeRati
     rating = callback_data.rating
     from_page = callback_data.from_page
 # type to int
-    user_id = 228
+    # user_id = 228
+    user_id = callback.from_user.id
     user = await change_users_media_rating(media_type, user_id, media_id, str(rating))
 
     image, message_text, kb = await media_message_params(media_type, user, media_id, from_page)
@@ -43,7 +45,8 @@ async def change_rating(callback: types.CallbackQuery, callback_data: ChangeRati
 
 @dp.callback_query(ViewStatusMenuCB.filter())
 async def view_status_menu(callback: types.CallbackQuery, callback_data: ViewStatusMenuCB):
-    user_id = 228
+    # user_id = 228
+    user_id = callback.from_user.id
     user = await get_user(user_id)
 
     media_type = callback_data.media_type
@@ -65,7 +68,8 @@ async def change_status(callback: types.CallbackQuery, callback_data: ChangeStat
     status = callback_data.status
     from_page = callback_data.from_page
 # type to int
-    user_id = 228
+    # user_id = 228
+    user_id = callback.from_user.id
     user = await change_users_media_status(media_type, user_id, media_id, str(status))
 
     image, message_text, kb = await media_message_params(media_type, user, media_id, from_page)
@@ -78,7 +82,8 @@ async def change_status(callback: types.CallbackQuery, callback_data: ChangeStat
 
 @dp.callback_query(ViewRemovingMenuCB.filter())
 async def view_removing_menu(callback: types.CallbackQuery, callback_data: ViewRemovingMenuCB):
-    user_id = 228
+    # user_id = 228
+    user_id = callback.from_user.id
     user = await get_user(user_id)
 
     media_type = callback_data.media_type
@@ -99,7 +104,8 @@ async def remove_media(callback: types.CallbackQuery, callback_data: RemoveMedia
     media_id = callback_data.media_id
     from_page = callback_data.from_page
 # type to int
-    user_id = 228
+    # user_id = 228
+    user_id = callback.from_user.id
     user = await remove_media_from_user(media_type, user_id, media_id)
 
     kb = await get_users_medias_kb(media_type, user, from_page)

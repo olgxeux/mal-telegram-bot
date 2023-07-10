@@ -13,7 +13,8 @@ async def view_users_media_list(callback: types.CallbackQuery, callback_data: Vi
     if state.get_state() is not None:
         await state.clear()
 
-    user_id = 228
+    # user_id = 228
+    user_id = callback.from_user.id
     user = await get_user(user_id)
 
     type = callback_data.media_type
@@ -33,7 +34,8 @@ async def view_users_media_list(callback: types.CallbackQuery, callback_data: Vi
 
 @dp.callback_query(ViewUsersMediaCB.filter())
 async def view_users_media(callback: types.CallbackQuery, callback_data: ViewUsersMediaCB):
-    user_id = 228
+    # user_id = 228
+    user_id = callback.from_user.id
     user = await get_user(user_id)
 
     media_type = callback_data.media_type
