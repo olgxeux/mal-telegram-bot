@@ -10,7 +10,7 @@ from database.mongodb_manager import get_user
 
 @dp.callback_query(ViewUsersListCB.filter())
 async def view_users_media_list(callback: types.CallbackQuery, callback_data: ViewUsersListCB, state: FSMContext):
-    if state.get_state() is not None:
+    if await state.get_state() is not None:
         await state.clear()
 
     # user_id = 228

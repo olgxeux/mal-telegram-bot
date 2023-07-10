@@ -29,26 +29,32 @@ async def get_users_medias_kb(type: str, user: dict, page: int, per_page=9) -> I
     print(page, last_page)
 
     builder = InlineKeyboardBuilder()
+    
+    if page == -1:
+        page = 0
 
     for media in media_list[per_page * page: per_page * page + per_page]:
         builder.button(
             text=media["Title"]["userPreferred"],
             callback_data=ViewUsersMediaCB(media_type=type, media_id=media["Id"], from_page=page))
-    if page == 0:
-        builder.button(
-            text=">",
-            callback_data=ViewUsersListCB(media_type=type, page=page + 1))
-    elif page == last_page:
-        builder.button(
-            text="<",
-            callback_data=ViewUsersListCB(media_type=type, page=page - 1))
-    else:
-        builder.button(
-            text="<",
-            callback_data=ViewUsersListCB(media_type=type, page=page - 1))
-        builder.button(
-            text=">",
-            callback_data=ViewUsersListCB(media_type=type, page=page + 1))
+
+    if last_page != -1 and len(media_list) > per_page:
+        if page == 0:
+            builder.button(
+                text=">",
+                callback_data=ViewUsersListCB(media_type=type, page=page + 1))
+        elif page == last_page:
+            builder.button(
+                text="<",
+                callback_data=ViewUsersListCB(media_type=type, page=page - 1))
+        else:
+            builder.button(
+                text="<",
+                callback_data=ViewUsersListCB(media_type=type, page=page - 1))
+            builder.button(
+                text=">",
+                callback_data=ViewUsersListCB(media_type=type, page=page + 1))
+    
     builder.button(
         text="Back",
         callback_data=ViewMainMenuCB())
@@ -144,21 +150,25 @@ async def get_search_medias_kb(media_type: str, search_prompt: str, media_list: 
         builder.button(
             text=media["title"]["userPreferred"],
             callback_data=ViewSearchMediaCB(media_type=media_type, media_id=media["id"], from_page=from_page, search_prompt=search_prompt))
-    if page <= 1:
-        builder.button(
-            text=">",
-            callback_data=ViewSearchListCB(media_type=media_type, page=page + 1, search_prompt=search_prompt, from_page=from_page))
-    elif not has_next_page:
-        builder.button(
-            text="<",
-            callback_data=ViewSearchListCB(media_type=media_type, page=page - 1, search_prompt=search_prompt, from_page=from_page))
-    else:
-        builder.button(
-            text="<",
-            callback_data=ViewSearchListCB(media_type=media_type, page=page - 1, search_prompt=search_prompt, from_page=from_page))
-        builder.button(
-            text=">",
-            callback_data=ViewSearchListCB(media_type=media_type, page=page + 1, search_prompt=search_prompt, from_page=from_page))
+    
+    if len(media_list) != 0:
+        if has_next_page:
+            if page == 1:
+                builder.button(
+                    text=">",
+                    callback_data=ViewSearchListCB(media_type=media_type, page=page + 1, search_prompt=search_prompt, from_page=from_page))
+            else:
+                builder.button(
+                    text="<",
+                    callback_data=ViewSearchListCB(media_type=media_type, page=page - 1, search_prompt=search_prompt, from_page=from_page))
+                builder.button(
+                    text=">",
+                    callback_data=ViewSearchListCB(media_type=media_type, page=page + 1, search_prompt=search_prompt, from_page=from_page))
+        else:
+            builder.button(
+                text="<",
+                callback_data=ViewSearchListCB(media_type=media_type, page=page - 1, search_prompt=search_prompt, from_page=from_page))
+    
     builder.button(
         text="Back",
         callback_data=ViewUsersListCB(media_type=media_type, page=from_page))

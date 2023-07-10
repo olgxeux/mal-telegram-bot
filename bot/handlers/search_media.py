@@ -163,11 +163,6 @@ async def add_media(callback: types.CallbackQuery, callback_data: AddMediaCB):
     }
     user = await add_media_for_user(media_type, user_id, user_media)
 
-    kb = await get_status_step_menu_kb(
-        media_type, media_id, from_page, rating, search_prompt)
-
-    kb = await get_users_medias_kb(media_type, user, 0)
-
     image, message_text, kb = await media_message_params(media_type, user, media_id, from_page, search_prompt)
 
     chat_id = callback.message.chat.id
