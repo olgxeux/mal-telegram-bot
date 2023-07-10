@@ -65,25 +65,24 @@ async def get_users_medias_kb(type: str, user: dict, page: int, per_page=9) -> I
 
 
 async def get_users_media_kb(type: str, media: dict, from_page: int, ) -> InlineKeyboardMarkup:
-
     builder = InlineKeyboardBuilder()
-
     media_id = media['id']
-    builder.button(
+
+    builder.row(InlineKeyboardButton(
         text="Change rating",
-        callback_data=ViewRatingMenuCB(media_type=type, media_id=media_id, from_page=from_page))
-    builder.button(
+        callback_data=ViewRatingMenuCB(media_type=type, media_id=media_id, from_page=from_page).pack()))
+
+    builder.row(InlineKeyboardButton(
         text="Change status",
-        callback_data=ViewStatusMenuCB(media_type=type, media_id=media_id, from_page=from_page))
-    builder.button(
+        callback_data=ViewStatusMenuCB(media_type=type, media_id=media_id, from_page=from_page).pack()))
+
+    builder.row(InlineKeyboardButton(
         text="Remove",
-        callback_data=ViewRemovingMenuCB(media_type=type, media_id=media_id, from_page=from_page))
-    # builder.button(
-    #     text="Add",
-    #     callback_data=ViewAddingMenuCB(media_id=media_id))
-    builder.button(
+        callback_data=ViewRemovingMenuCB(media_type=type, media_id=media_id, from_page=from_page).pack()))
+
+    builder.row(InlineKeyboardButton(
         text="Back",
-        callback_data=ViewUsersListCB(media_type=type, page=from_page))
+        callback_data=ViewUsersListCB(media_type=type, page=from_page).pack()))
 
     return builder.as_markup()
 
