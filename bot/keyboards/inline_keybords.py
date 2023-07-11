@@ -140,10 +140,16 @@ async def get_searching_menu_kb(type: str, from_page: int) -> InlineKeyboardMark
     return builder.as_markup()
 
 
-async def get_search_medias_kb(media_type: str, search_prompt: str, media_list: dict, page: int, has_next_page: bool, from_page: int) -> InlineKeyboardMarkup:
+async def get_search_medias_kb(media_type: str, search_prompt: str, media_list: dict, page: int, has_next_page: bool, from_page: int, per_page=10) -> InlineKeyboardMarkup:
+    last_page = ceil(len(media_list) / per_page) - 2
+    if page > last_page:
+        page = last_page
+
+    if page == -1:
+        page = 0
 
     builder = InlineKeyboardBuilder()
-    for media in media_list:
+    for media in media_list[per_page * page: per_page * page + per_page]:
         builder.row(
             InlineKeyboardButton(
                 text=media["title"]["userPreferred"],
@@ -151,44 +157,24 @@ async def get_search_medias_kb(media_type: str, search_prompt: str, media_list: 
                     media_type=media_type,
                     media_id=media["id"],
                     from_page=from_page,
+                    from_page_search=page,
                     search_prompt=search_prompt,).pack(),
             )
         )
 
-    if len(media_list) != 0:
-        # TODO hasNextPage can return false info if len(media) == per_page
-        if has_next_page:
-            if page == 1:
-                builder.row(
-                    InlineKeyboardButton(
-                        text=">",
-                        callback_data=ViewSearchListCB(
-                            media_type=media_type,
-                            page=page + 1,
-                            search_prompt=search_prompt,
-                            from_page=from_page,).pack(),
-                    )
+    if last_page != -1 and len(media_list) > per_page:
+        if page == 0:
+            builder.row(
+                InlineKeyboardButton(
+                    text=">",
+                    callback_data=ViewSearchListCB(
+                        media_type=media_type,
+                        page=page + 1,
+                        search_prompt=search_prompt,
+                        from_page=from_page,).pack(),
                 )
-            else:
-                builder.row(
-                    InlineKeyboardButton(
-                        text="<",
-                        callback_data=ViewSearchListCB(
-                            media_type=media_type,
-                            page=page - 1,
-                            search_prompt=search_prompt,
-                            from_page=from_page,).pack(),
-                    ),
-                    InlineKeyboardButton(
-                        text=">",
-                        callback_data=ViewSearchListCB(
-                            media_type=media_type,
-                            page=page + 1,
-                            search_prompt=search_prompt,
-                            from_page=from_page,).pack(),
-                    ),
-                )
-        else:
+            )
+        elif page == last_page:
             builder.row(
                 InlineKeyboardButton(
                     text="<",
@@ -198,6 +184,25 @@ async def get_search_medias_kb(media_type: str, search_prompt: str, media_list: 
                         search_prompt=search_prompt,
                         from_page=from_page,).pack(),
                 )
+            )
+        else:
+            builder.row(
+                InlineKeyboardButton(
+                    text="<",
+                    callback_data=ViewSearchListCB(
+                        media_type=media_type,
+                        page=page - 1,
+                        search_prompt=search_prompt,
+                        from_page=from_page,).pack(),
+                ),
+                InlineKeyboardButton(
+                    text=">",
+                    callback_data=ViewSearchListCB(
+                        media_type=media_type,
+                        page=page + 1,
+                        search_prompt=search_prompt,
+                        from_page=from_page,).pack(),
+                ),
             )
 
     builder.row(
