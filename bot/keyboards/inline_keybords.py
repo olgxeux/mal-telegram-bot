@@ -157,7 +157,6 @@ async def get_search_medias_kb(media_type: str, search_prompt: str, media_list: 
                     media_type=media_type,
                     media_id=media["id"],
                     from_page=from_page,
-                    from_page_search=page,
                     search_prompt=search_prompt,).pack(),
             )
         )
