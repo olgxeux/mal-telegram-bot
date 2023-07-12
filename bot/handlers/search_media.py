@@ -64,7 +64,7 @@ async def view_users_media_list(callback: types.CallbackQuery, callback_data: Vi
     from_page = callback_data.from_page
     page_number = callback_data.page
 
-    page = (await get_page(page_number, search_prompt, media_type.upper()))["Page"]
+    page = (await get_page(1, search_prompt, media_type.upper()))["Page"]
     medias = page["media"]
     has_next_page = page["pageInfo"]["hasNextPage"]
 
