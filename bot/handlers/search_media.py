@@ -40,7 +40,7 @@ async def view_search_list(message: types.Message, state: FSMContext):
     medias = page["media"]
     has_next_page = page["pageInfo"]["hasNextPage"]
 
-    kb = await get_search_medias_kb(media_type, search_prompt, medias, 1, has_next_page, from_page)
+    kb = await get_search_medias_kb(media_type, search_prompt, medias, 0, has_next_page, from_page)
 
     if message.photo:
         chat_id = message.chat.id
