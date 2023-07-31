@@ -40,9 +40,9 @@ async def view_users_media(callback: types.CallbackQuery, callback_data: ViewUse
 
     media_type = callback_data.media_type
     media_id = callback_data.media_id
-    from_page = callback_data.from_page
+    from_page_user = callback_data.from_page_user
 
-    image, message_text, kb = await media_message_params(media_type, user, media_id, from_page)
+    image, message_text, kb = await media_message_params(media_type, user, media_id, from_page_user)
 
     chat_id = callback.message.chat.id
     message_id = callback.message.message_id

@@ -3,7 +3,7 @@ from database.gql_manager import *
 from utils import type_to_list_name
 
 
-async def media_message_params(media_type: str, user: dict, media_id: int, from_page: int, search_prompt: str | None = None):
+async def media_message_params(media_type: str, user: dict, media_id: int, from_page_user: int, from_page_search: int = 0, search_prompt: str | None = None):
     list_name = type_to_list_name(media_type)
 
     users_media = None
@@ -36,8 +36,8 @@ async def media_message_params(media_type: str, user: dict, media_id: int, from_
     message_text = "".join(text_parts)
 
     if is_in_users_list:
-        kb = await get_users_media_kb(media_type, gql_media, from_page)
+        kb = await get_users_media_kb(media_type, gql_media, from_page_user)
     else:
-        kb = await get_search_media_kb(media_type, gql_media, from_page, search_prompt)
+        kb = await get_search_media_kb(media_type, gql_media, from_page_user, from_page_search, search_prompt)
 
     return image, message_text, kb
