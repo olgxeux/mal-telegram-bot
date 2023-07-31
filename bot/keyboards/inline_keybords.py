@@ -64,7 +64,7 @@ async def get_users_medias_kb(type: str, user: dict, page: int, per_page=9) -> I
     return builder.as_markup()
 
 
-async def get_users_media_kb(type: str, media: dict, from_page_user: int, ) -> InlineKeyboardMarkup:
+async def get_users_media_kb(type: str, media: dict, from_page_user: int) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
     media_id = media['id']
 
@@ -228,7 +228,7 @@ async def get_search_media_kb(media_type: str, media: dict, from_page_user: int,
     media_id = media['id']
     builder.button(
         text="Add",
-        callback_data=ViewAddRatingMenuCB(media_type=media_type, media_id=media_id, from_page_user=from_page_user, search_prompt=search_prompt))
+        callback_data=ViewAddRatingMenuCB(media_type=media_type, media_id=media_id, from_page_user=from_page_user, from_page_search=from_page_search, search_prompt=search_prompt))
     builder.button(
         text="Back",
         callback_data=ViewSearchListCB(search_prompt=search_prompt, media_type=media_type, page=from_page_search, from_page_user=from_page_user))
@@ -237,31 +237,31 @@ async def get_search_media_kb(media_type: str, media: dict, from_page_user: int,
     return builder.as_markup()
 
 
-async def get_rating_step_menu_kb(type: str, media_id: int, from_page_user: int, search_prompt: str | None) -> InlineKeyboardMarkup:
+async def get_rating_step_menu_kb(type: str, media_id: int, from_page_user: int, from_page_search: int, search_prompt: str | None) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
 
     for rating in range(11):
         builder.button(
             text=f"{rating}",
-            callback_data=ViewAddStatusMenuCB(media_type=type, media_id=media_id, rating=rating, from_page_user=from_page_user, search_prompt=search_prompt))
+            callback_data=ViewAddStatusMenuCB(media_type=type, media_id=media_id, rating=rating, from_page_user=from_page_user, from_page_search=from_page_search, search_prompt=search_prompt))
 
     builder.button(
         text="Cancel",
-        callback_data=ViewUsersMediaCB(media_type=type, media_id=media_id, from_page_user=from_page_user))
+        callback_data=ViewUsersMediaCB(media_type=type, media_id=media_id, from_page_user=from_page_user, from_page_search=from_page_search, search_prompt=search_prompt))
 
     return builder.as_markup()
 
 
-async def get_status_step_menu_kb(type: str, media_id: int, from_page_user: int, rating: int, search_prompt: str) -> InlineKeyboardMarkup:
+async def get_status_step_menu_kb(type: str, media_id: int, from_page_user: int, rating: int, search_prompt: str, from_page_search: int) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
 
     for status in range(4):
         builder.button(
             text=f"{status}",
-            callback_data=AddMediaCB(media_type=type, media_id=media_id, rating=rating, status=status, from_page_user=from_page_user, search_prompt=search_prompt))
+            callback_data=AddMediaCB(media_type=type, media_id=media_id, rating=rating, status=status, from_page_user=from_page_user, search_prompt=search_prompt, from_page_search=from_page_search))
 
     builder.button(
         text="Cancel",
-        callback_data=ViewUsersMediaCB(media_type=type, media_id=media_id, from_page_user=from_page_user))
+        callback_data=ViewUsersMediaCB(media_type=type, media_id=media_id, from_page_user=from_page_user, from_page_search=from_page_search, search_prompt=search_prompt))
 
     return builder.as_markup()

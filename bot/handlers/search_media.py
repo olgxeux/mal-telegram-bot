@@ -109,10 +109,11 @@ async def add_rating_media(callback: types.CallbackQuery, callback_data: ViewAdd
     media_type = callback_data.media_type
     media_id = callback_data.media_id
     from_page_user = callback_data.from_page_user
+    from_page_search = callback_data.from_page_search
     search_prompt = callback_data.search_prompt
 
     kb = await get_rating_step_menu_kb(
-        media_type, media_id, from_page_user, search_prompt)
+        media_type, media_id, from_page_user, from_page_search, search_prompt)
 
     chat_id = callback.message.chat.id
     message_id = callback.message.message_id
@@ -129,11 +130,12 @@ async def add_status_media(callback: types.CallbackQuery, callback_data: ViewAdd
     media_type = callback_data.media_type
     media_id = callback_data.media_id
     from_page_user = callback_data.from_page_user
+    from_page_search = callback_data.from_page_search
     search_prompt = callback_data.search_prompt
     rating = callback_data.rating
 
     kb = await get_status_step_menu_kb(
-        media_type, media_id, from_page_user, rating, search_prompt)
+        media_type, media_id, from_page_user, rating, search_prompt, from_page_search)
 
     chat_id = callback.message.chat.id
     message_id = callback.message.message_id
@@ -150,6 +152,7 @@ async def add_media(callback: types.CallbackQuery, callback_data: AddMediaCB):
     media_type = callback_data.media_type
     media_id = callback_data.media_id
     from_page_user = callback_data.from_page_user
+    from_page_search = callback_data.from_page_search
     search_prompt = callback_data.search_prompt
     rating = callback_data.rating
     status = callback_data.status
@@ -164,7 +167,7 @@ async def add_media(callback: types.CallbackQuery, callback_data: AddMediaCB):
     }
     user = await add_media_for_user(media_type, user_id, user_media)
 
-    image, message_text, kb = await media_message_params(media_type, user, media_id, from_page_user, search_prompt)
+    image, message_text, kb = await media_message_params(media_type, user, media_id, from_page_user, from_page_search, search_prompt)
 
     chat_id = callback.message.chat.id
     message_id = callback.message.message_id

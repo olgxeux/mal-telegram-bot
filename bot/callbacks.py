@@ -14,8 +14,10 @@ class ViewUsersListCB(CallbackData, prefix="ViewUL"):
 class ViewUsersMediaCB(CallbackData, prefix="ViewUM"):
     media_type: str
     media_id: int
-    # is_in_list: bool
     from_page_user: int
+    from_page_search: int = 0
+    search_prompt: str | None = None
+
 
 
 class ViewRatingMenuCB(CallbackData, prefix="ViewRaM"):
@@ -87,6 +89,7 @@ class ViewAddRatingMenuCB(CallbackData, prefix="ViewARM"):
     media_type: str
     media_id: int
     from_page_user: int
+    from_page_search: int
     search_prompt: str | None
 
 
@@ -96,6 +99,8 @@ class ViewAddStatusMenuCB(CallbackData, prefix="ViewASM"):
     from_page_user: int
     search_prompt: str
     rating: int
+    from_page_search: int
+
 
 
 class AddMediaCB(CallbackData, prefix="AddM"):
@@ -105,6 +110,7 @@ class AddMediaCB(CallbackData, prefix="AddM"):
     search_prompt: str
     rating: int
     status: int
+    from_page_search: int
 
 
 # class AddStatusMenuCB(CallbackData, prefix="ViewSM"):
