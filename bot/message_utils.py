@@ -1,4 +1,4 @@
-from bot.keyboards.inline_keybords import get_users_media_kb, get_search_media_kb
+from bot.keyboards.inline_keybords import get_users_media_kb, get_search_media_kb, get_users_media_in_search_kb
 from database.gql_manager import *
 from utils import type_to_list_name
 
@@ -35,9 +35,14 @@ async def media_message_params(media_type: str, user: dict, media_id: int, from_
 
     message_text = "".join(text_parts)
 
-    if is_in_users_list:
+    if is_in_users_list and not search_prompt:
+        print(111111111111111111)
         kb = await get_users_media_kb(media_type, gql_media, from_page_user)
+    elif is_in_users_list and search_prompt:
+        print(222222222222222222)
+        kb = await get_users_media_in_search_kb(media_type, gql_media, from_page_user, from_page_search, search_prompt)
     else:
+        print(333333333333333333)
         kb = await get_search_media_kb(media_type, gql_media, from_page_user, from_page_search, search_prompt)
 
     return image, message_text, kb

@@ -237,6 +237,25 @@ async def get_search_media_kb(media_type: str, media: dict, from_page_user: int,
     return builder.as_markup()
 
 
+
+async def get_users_media_in_search_kb(media_type: str, media: dict, from_page_user: int, from_page_search: int, search_prompt: str | None) -> InlineKeyboardMarkup:
+    builder = InlineKeyboardBuilder()
+    media_id = media['id']
+
+
+    builder.row(InlineKeyboardButton(
+        text="View in your list",
+        callback_data=ViewUsersMediaCB(media_type=media_type, media_id=media_id, from_page_user=0).pack()))
+
+    builder.row(InlineKeyboardButton(
+        text="Back",
+        callback_data=ViewSearchListCB(search_prompt=search_prompt, media_type=media_type, page=from_page_search, from_page_user=from_page_user).pack()))
+
+    return builder.as_markup()
+
+
+
+
 async def get_rating_step_menu_kb(type: str, media_id: int, from_page_user: int, from_page_search: int, search_prompt: str | None) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
 
